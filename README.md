@@ -8,4 +8,4 @@ src目录为falcon的MindSpore实现，实验证明该版本实现与HuggingFace
 
 train_falcon为在MindNLP框架中基于falcon-rw-1b预训练模型进行微调的代码，数据集为GLUE基准数据集中的MRPC语料，任务是语义匹配。
 
-FlashAttention支持......
+FlashAttention kernel用CUDA编写，参考了代码https://github.com/tspeterkim/flash-attention-minimal/blob/main/flash.cu，目前为只支持静态block size与FP32数据格式
