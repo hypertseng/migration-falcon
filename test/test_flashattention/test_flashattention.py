@@ -89,7 +89,7 @@ def load_flash_cuda_kernel(self, func_name, context_length):
     if device_target != "GPU":
         raise RuntimeError("FlashAttention operator only support GPU currently.")
 
-    so_path = compile_kernel(kernel_name="flash", Tmax=context_length)
+    so_path = compile_kernel(kernel_name="flash_attn_2_fwd", Tmax=context_length)
     flash_op = ops.Custom(
         f"{str(so_path)}:{func_name}",
         out_shape=lambda q, k, v, l, m: q,
