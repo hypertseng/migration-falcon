@@ -64,7 +64,7 @@ Tri Dao
 
 Paper: https://tridao.me/publications/flash2/flash2.pdf
 
-## Creat your Chatbot in 5 min
+## Create your ChatBot in 5 min
 
 ### 环境搭建
 
