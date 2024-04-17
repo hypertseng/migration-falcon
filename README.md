@@ -28,10 +28,10 @@ train_falcon为在MindNLP框架中基于falcon-rw-1b预训练模型进行微调�
 
 可通过Huggingface镜像站快速加载模型。
 
-```
+```bash
 wget https://hf-mirror.com/hfd/hfd.sh
 chmod a+x hfd.sh
-./hfd.sh Rocketknight1/falcon-rw-1b --tool aria2c -x 4  // 这里选择下载规模最小的版本，若有足够的硬件支持，可下载其他版本
+./hfd.sh Rocketknight1/falcon-rw-1b --tool aria2c -x 4  # 这里选择下载规模最小的版本，若有足够的硬件支持，可下载其他版本
 ```
 
 ### 训练命令
@@ -49,9 +49,18 @@ python llm/peft/train_falcon/train_mrpc.py \
 --lora
 ```
 
-## flash_attn支持
+## FlashAttention支持
 
-原预计通过AOT Compiler基于高级领域特定语言(Domain-Specific Languages, DSL)Triton编写的较完备的FlashAttention实现编译得到Low Level的CUDA kernel，再通过Custom自定义算子的方式加载进MindSpore，但经研究发现，Triton AOT Compiler的编译逻辑在预定模板代码的基础上直接嵌入了通过PTX生成的cubin二进制文件，cubin文件只能在CUDA Runtime中加载运行，并不是生成kernel代码。因此，参考了代码https://github.com/tspeterkim/flash-attention-minimal/blob/main/flash.cu ，用纯CUDA C++编写了FlashAttention kernel包含两个版本，目前只支持静态block size与FP32数据格式。仓库中包含了调试flash_attn_2的vscode调试设置与CUDA C++代码，可供初学者使用。
+原预计通过AOT Compiler基于高级领域特定语言(Domain-Specific Languages, DSL)Triton编写的较完备的FlashAttention实现编译得到Low Level的CUDA kernel，再通过Custom自定义算子的方式加载进MindSpore，但经研究发现，Triton AOT Compiler的编译逻辑在预定模板代码的基础上直接嵌入了通过PTX生成的cubin二进制文件，cubin文件只能在CUDA Runtime中加载运行，并不是生成kernel代码。因此，参考了代码https://github.com/tspeterkim/flash-attention-minimal/blob/main/flash.cu ，用纯CUDA C++编写了FlashAttention kernel，目前实现了FlashAttention_v1与FlashAttention_v2的正反向计算（含causal mask），但只支持静态block size与FP32数据格式。仓库中包含了调试FlashAttention_v1与FlashAttention_v2的的vscode调试设置与CUDA C++代码，可供初学者使用。
+
+可在mindnlp根目录下通过以下脚本测试其正确性并通过mindsight查看性能分析结果：
+
+```bash
+# 开启mindinsight 记录算子运行耗时
+mindinsight start
+
+pytest -vs ./tests/ut/modules/test_flashattention.py
+```
 
 FlashAttention论文出处如下：
 
@@ -79,7 +88,7 @@ bash scripts/build_and_reinstall.sh#安装Mindnlp
 pip install git+https://github.com/mindspore-lab/mindnlp.git
 ```
 
-### requirement
+### requirements
 
 ```bash
 pip install "mindspore>=2.2"
