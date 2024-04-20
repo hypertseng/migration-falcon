@@ -6,7 +6,7 @@
 
 ## 模型迁移与精度对齐
 
-src目录为falcon的MindSpore实现，实验证明该版本实现与HuggingFace中模型实现在容纳误差为$`10^{-3}`$的前提下两者等效，完整模型已上传至modelscope社区，截至目前下载量已达3.1k 。https://www.modelscope.cn/models/mindnlp/falcon-rw-1b/summary ，包括模型实现、所需配置文件以及转换好的预训练权重文件，也可在[hypertseng/falcon-rw-1b_mindspore (github.com)](https://github.com/hypertseng/falcon-rw-1b_mindspore)里获取除checkpoint之外的代码与配置文件。
+src目录为falcon的MindSpore实现，实验证明该版本实现与HuggingFace中模型实现在容纳误差为$`10^{-3}`$的前提下两者等效，完整模型已上传至modelscope社区，截至目前下载量已达**3.1k** 。https://www.modelscope.cn/models/mindnlp/falcon-rw-1b/summary ，包括模型实现、所需配置文件以及转换好的预训练权重文件，也可在[hypertseng/falcon-rw-1b_mindspore (github.com)](https://github.com/hypertseng/falcon-rw-1b_mindspore)里获取除checkpoint之外的代码与配置文件。
 单元测试包含模型配置与文本生成的67项测试，已全部通过，具体测试项目与代码见test目录。搭建好项目环境后，进入mindnlp目录在终端输入以下命令可进行测试：
 
 ```
