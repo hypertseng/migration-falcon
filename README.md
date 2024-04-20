@@ -18,7 +18,7 @@ pytest -vs tests/ut/transformers/models/falcon
 
 train_falcon为在MindNLP框架中基于falcon-rw-1b预训练模型进行微调的代码，数据集为GLUE基准数据集中的MRPC语料，任务是语义匹配。
 
-默认训练10epoch，因为模型本身理解能力较强，实验表明在训练5个epoch之后已基本收敛。
+默认训练10epoch，因为模型本身理解能力较强，实验表明在训练5个epoch之后已基本收敛，训练好的文件已放在peft_model目录下，可直接加载。
 
 ### 数据集下载
 
