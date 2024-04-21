@@ -5,6 +5,15 @@
 
 #define ENABLE_NOTE_LOG 0
 
+__global__ void initArray(float *arr, const int N, const float val)
+{
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < N)
+    {
+        arr[idx] = val;
+    }
+}
+
 __global__ void flash_attn_1_fwd_f32_kernel(
     const float *Q,
     const float *K,
@@ -246,7 +255,7 @@ __global__ void flash_attn_2_fwd_f32_kernel(
     }
 }
 
-__global__ void flash_attn_1_bwd_kernel(
+__global__ void flash_attn_1_bwd_f32_kernel(
     const float *Q,
     const float *K,
     const float *V,
@@ -606,15 +615,18 @@ extern "C"
         float *Q = static_cast<float *>(params[0]);
         float *K = static_cast<float *>(params[1]);
         float *V = static_cast<float *>(params[2]);
-        // put l,m as input params
-        float *l = static_cast<float *>(params[3]);
-        float *m = static_cast<float *>(params[4]);
-        float *O = static_cast<float *>(params[5]);
+        float *O = static_cast<float *>(params[3]);
+        float *l = static_cast<float *>(params[4]);
+        float *m = static_cast<float *>(params[5]);
 
         const int B = static_cast<int>(shapes[0][0]);
         const int nh = static_cast<int>(shapes[0][1]);
         const int N = static_cast<int>(shapes[0][2]);
         const int d = static_cast<int>(shapes[0][3]);
+
+        // initialize l to 0 and m to -inf
+        cudaMemset(l, 0, B * nh * N * sizeof(float));
+        initArray<<<64, 512>>>(m, B * nh * N, -INFINITY);
 
         // set block size, TODO: dynamically set block size
         const int Bc = 32;
@@ -658,9 +670,8 @@ extern "C"
         float *Q = static_cast<float *>(params[0]);
         float *K = static_cast<float *>(params[1]);
         float *V = static_cast<float *>(params[2]);
-        // put l,m as input params
-        float *l = static_cast<float *>(params[3]);
-        float *O = static_cast<float *>(params[4]);
+        float *O = static_cast<float *>(params[3]);
+        float *L = static_cast<float *>(params[4]);
 
         const int B = static_cast<int>(shapes[0][0]);
         const int nh = static_cast<int>(shapes[0][1]);
@@ -692,7 +703,7 @@ extern "C"
         dim3 block_dim(Bc);   // Bc threads per block
 
         flash_attn_2_fwd_f32_kernel<<<grid_dim, block_dim, sram_size, custream>>>(
-            Q, K, V, N, d, Tc, Tr, Bc, Br, softmax_scale, l, O);
+            Q, K, V, N, d, Tc, Tr, Bc, Br, softmax_scale, L, O);
         return 0;
     }
 }
@@ -708,19 +719,22 @@ extern "C"
         float *Q = static_cast<float *>(params[0]);
         float *K = static_cast<float *>(params[1]);
         float *V = static_cast<float *>(params[2]);
-        float *dQ = static_cast<float *>(params[3]);
-        float *dK = static_cast<float *>(params[4]);
-        float *dV = static_cast<float *>(params[5]);
-        // put l,m as input params
-        float *l = static_cast<float *>(params[6]);
-        float *m = static_cast<float *>(params[7]);
-        float *dO = static_cast<float *>(params[8]);
-        float *O = static_cast<float *>(params[9]);
+        float *O = static_cast<float *>(params[3]);
+        float *dO = static_cast<float *>(params[4]);
+        float *l = static_cast<float *>(params[5]);
+        float *m = static_cast<float *>(params[6]);
+        float *dQ = static_cast<float *>(params[7]);
+        float *dK = static_cast<float *>(params[8]);
+        float *dV = static_cast<float *>(params[9]);
 
         const int B = static_cast<int>(shapes[0][0]);
         const int nh = static_cast<int>(shapes[0][1]);
         const int N = static_cast<int>(shapes[0][2]);
         const int d = static_cast<int>(shapes[0][3]);
+
+        cudaMemset(dQ, 0, B * nh * N * d * sizeof(float));
+        cudaMemset(dK, 0, B * nh * N * d * sizeof(float));
+        cudaMemset(dV, 0, B * nh * N * d * sizeof(float));
 
         // set block size, TODO: dynamically set block size
         const int Bc = 16;
@@ -763,17 +777,21 @@ extern "C"
         float *Q = static_cast<float *>(params[0]);
         float *K = static_cast<float *>(params[1]);
         float *V = static_cast<float *>(params[2]);
-        float *dQ = static_cast<float *>(params[3]);
-        float *dK = static_cast<float *>(params[4]);
-        float *dV = static_cast<float *>(params[5]);
-        float *dO = static_cast<float *>(params[6]);
-        float *L = static_cast<float *>(params[7]);
-        float *O = static_cast<float *>(params[8]);
+        float *O = static_cast<float *>(params[3]);
+        float *dO = static_cast<float *>(params[4]);
+        float *L = static_cast<float *>(params[5]);
+        float *dQ = static_cast<float *>(params[6]);
+        float *dK = static_cast<float *>(params[7]);
+        float *dV = static_cast<float *>(params[8]);
 
         const int B = static_cast<int>(shapes[0][0]);
         const int nh = static_cast<int>(shapes[0][1]);
         const int N = static_cast<int>(shapes[0][2]);
         const int d = static_cast<int>(shapes[0][3]);
+
+        cudaMemset(dQ, 0, B * nh * N * d * sizeof(float));
+        cudaMemset(dK, 0, B * nh * N * d * sizeof(float));
+        cudaMemset(dV, 0, B * nh * N * d * sizeof(float));
 
         // set block size, TODO: dynamically set block size
         const int Bc = 16;
