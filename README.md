@@ -51,7 +51,7 @@ python llm/peft/train_falcon/train_mrpc.py \
 
 ## FlashAttention支持
 
-原预计通过AOT Compiler基于高级领域特定语言(Domain-Specific Languages, DSL)Triton编写的较完备的FlashAttention实现编译得到Low Level的CUDA kernel，再通过Custom自定义算子的方式加载进MindSpore，但经研究发现，Triton AOT Compiler的编译逻辑在预定模板代码的基础上直接嵌入了通过PTX生成的cubin二进制文件，cubin文件只能在CUDA Runtime中加载运行，并不是生成kernel代码。因此，参考了代码https://github.com/tspeterkim/flash-attention-minimal/blob/main/flash.cu ，用纯CUDA C++编写了FlashAttention kernel，目前实现了FlashAttention_v1与FlashAttention_v2的正反向计算（含causal mask），但只支持静态block size与FP32数据格式。仓库中包含了调试FlashAttention_v1与FlashAttention_v2的的vscode调试设置与CUDA C++代码，可供初学者使用。
+原预计通过AOT Compiler基于高级领域特定语言(Domain-Specific Languages, DSL)Triton编写的较完备的FlashAttention实现编译得到Low Level的CUDA kernel，再通过Custom自定义算子的方式加载进MindSpore，但经研究发现，Triton AOT Compiler的编译逻辑在预定模板代码的基础上直接嵌入了通过PTX生成的cubin二进制文件，cubin文件只能在CUDA Runtime中加载运行，并不是生成kernel代码。因此，参考了代码https://github.com/tspeterkim/flash-attention-minimal/blob/main/flash.cu ，用纯CUDA C++编写了FlashAttention kernel，目前实现了FlashAttention_v1与FlashAttention_v2的正反向计算（含causal mask），但只支持静态block size与FP32数据格式，可实现**3.5x-94x**的加速。仓库中包含了调试FlashAttention_v1与FlashAttention_v2的的vscode调试设置与CUDA C++代码，可供初学者使用。
 
 可在mindnlp根目录下通过以下脚本测试其正确性并通过mindsight查看性能分析结果：
 
