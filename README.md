@@ -1,6 +1,6 @@
 # graduation-project
 
-🤗CQU计算机学院毕业设计——基于MindSpore的Falcon大模型迁移与性能研究。
+🤗重庆大学计算机学院毕业设计——基于MindSpore的Falcon大模型迁移与性能研究。
 
 项目部分为华为昇思MindSpore社区开源任务，基于MindSpore的一个NLP易用开源库MindNLP https://github.com/mindlab-ai/mindnlp。
 
