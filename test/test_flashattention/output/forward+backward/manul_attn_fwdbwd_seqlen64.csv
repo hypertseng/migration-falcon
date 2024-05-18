@@ -1,0 +1,41 @@
+[Step:1, step_time:69147us, module_total_time:96867us]
+==========================================[Module]==========================================
+Module:Python, total_time:46214us, average_time:46214.00us, total_count:1, percent:47.71%
+
+Module:PynativeFramework, total_time:45025us, average_time:10.21us, total_count:4410, percent:46.48%
+  Event:DeviceTask, total_time:29034us, average_time:63.12us, total_count:460, percent:29.97%
+  Event:FrontendTask, total_time:12455us, average_time:23.50us, total_count:530, percent:12.86%
+  Event:BackendTask, total_time:8882us, average_time:16.45us, total_count:540, percent:9.17%
+  Event:BpropTask, total_time:5492us, average_time:22.88us, total_count:240, percent:5.67%
+  Event:AcquireGil, total_time:476us, average_time:0.18us, total_count:2620, percent:0.49%
+  EventInner:PyNativeInfer, total_time:4083us, average_time:6.80us, total_count:600
+  EventInner:WaitTaskFinish, total_time:2279us, average_time:56.98us, total_count:40
+  EventInner:Expander, total_time:1717us, average_time:12.26us, total_count:140
+  EventInner:ClearTopCell, total_time:1538us, average_time:153.80us, total_count:10
+  EventInner:PyNativeCast, total_time:293us, average_time:0.49us, total_count:600
+  EventInner:UpdateSens, total_time:4us, average_time:0.40us, total_count:10
+  EventInner:ClearAutoGradCell, total_time:0us, average_time:0.00us, total_count:10
+
+Module:Kernel, total_time:3154us, average_time:6.31us, total_count:500, percent:3.26%
+  Event:KernelLaunch, total_time:3154us, average_time:6.31us, total_count:500, percent:3.26%
+
+Module:RuntimeFramework, total_time:2474us, average_time:5.15us, total_count:480, percent:2.55%
+  Event:PreLaunch, total_time:2526us, average_time:16.84us, total_count:150, percent:2.61%
+  Event:OutputProcess, total_time:283us, average_time:7.08us, total_count:40, percent:0.29%
+  Event:MemoryFree, total_time:216us, average_time:1.54us, total_count:140, percent:0.22%
+  Event:MemoryAlloc, total_time:140us, average_time:1.00us, total_count:140, percent:0.14%
+  Event:InputProcess, total_time:10us, average_time:1.00us, total_count:10, percent:0.01%
+
+
+==========================================[Stage]==========================================
+Stage:Python, total_time:46214us, average_time:46214.00us, total_count:1, percent:66.83%
+
+Stage:WaitPipeline, total_time:9789us, average_time:13.79us, total_count:710, percent:14.16%
+
+Stage:RunOp, total_time:9706us, average_time:16.18us, total_count:600, percent:14.04%
+
+Stage:RunGradGraph, total_time:3401us, average_time:340.10us, total_count:10, percent:4.92%
+
+Stage:CompileGradGraph, total_time:37us, average_time:3.70us, total_count:10, percent:0.05%
+
+

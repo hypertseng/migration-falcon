@@ -1,0 +1,21 @@
+[Step:1, step_time:4906120us, module_total_time:4974145us]
+==========================================[Module]==========================================
+Module:PynativeFramework, total_time:4405562us, average_time:37021.53us, total_count:119, percent:88.57%
+  Event:DeviceTask, total_time:4405553us, average_time:489505.89us, total_count:9, percent:88.57%
+  Event:AcquireGil, total_time:49us, average_time:0.45us, total_count:110, percent:0.00%
+  EventInner:WaitTaskFinish, total_time:4321648us, average_time:432164.80us, total_count:10
+  EventInner:PyNativeInfer, total_time:1522us, average_time:152.20us, total_count:10
+  EventInner:PyNativeCast, total_time:13us, average_time:1.30us, total_count:10
+
+Module:Python, total_time:567886us, average_time:567886.00us, total_count:1, percent:11.42%
+
+Module:Kernel, total_time:697us, average_time:69.70us, total_count:10, percent:0.01%
+  Event:KernelLaunch, total_time:697us, average_time:69.70us, total_count:10, percent:0.01%
+
+
+==========================================[Stage]==========================================
+Stage:RunOp, total_time:4338234us, average_time:433823.40us, total_count:10, percent:88.42%
+
+Stage:Python, total_time:567886us, average_time:567886.00us, total_count:1, percent:11.58%
+
+
